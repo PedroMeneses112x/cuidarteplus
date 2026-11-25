@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { api } from "../../lib/api.jsx";
 import { useNavigate, Link } from "react-router-dom";
@@ -25,8 +24,17 @@ const registerSchema = yup.object().shape({
     .max(255, "El correo no puede exceder 255 caracteres"),
   rut: yup
     .string()
-    .matches(/^([0-9]{1,2}(\.[0-9]{3})*-[0-9kK]|[0-9]+-[0-9kK])$/, "El RUT debe tener formato válido (ej: 12.345.678-9 o 12345678-9)")
+    .matches(
+      /^([0-9]{1,2}(\.[0-9]{3})*-[0-9kK]|[0-9]+-[0-9kK])$/,
+      "El RUT debe tener formato válido (ej: 12.345.678-9 o 12345678-9)"
+    )
     .optional(),
+  acepta_privacidad: yup
+    .boolean()
+    .oneOf(
+      [true],
+      "Debes aceptar la Política de Privacidad y el tratamiento de datos (Ley N° 19.628)"
+    ),
 });
 
 export default function Register() {
@@ -69,6 +77,7 @@ export default function Register() {
               correo: "",
               password: "",
               rut: "",
+              acepta_privacidad: false,
             }}
             validationSchema={registerSchema}
             onSubmit={onSubmit}
@@ -158,6 +167,37 @@ export default function Register() {
                   />
                   <ErrorMessage
                     name="password"
+                    component="div"
+                    className="text-red-500 text-sm mt-1"
+                  />
+                </div>
+
+                <div className="pt-1">
+                  <div className="flex items-start gap-2">
+                    <Field
+                      id="acepta_privacidad"
+                      name="acepta_privacidad"
+                      type="checkbox"
+                      data-testid="checkbox-registro-privacidad"
+                      className="mt-1 h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
+                    />
+                    <label
+                      htmlFor="acepta_privacidad"
+                      className="text-sm text-gray-700"
+                    >
+                      He leído y acepto la{" "}
+                      <Link
+                        to="/politica-privacidad"
+                        target="_blank"
+                        className="text-primary font-semibold underline hover:text-secondary"
+                      >
+                        Política de Privacidad
+                      </Link>{" "}
+                      y autorizo el tratamiento de mis datos personales y clínicos conforme a la Ley N° 19.628. *
+                    </label>
+                  </div>
+                  <ErrorMessage
+                    name="acepta_privacidad"
                     component="div"
                     className="text-red-500 text-sm mt-1"
                   />
