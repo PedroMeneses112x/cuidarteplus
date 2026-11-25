@@ -45,15 +45,10 @@ jobs:
       - name: Construir imagen Docker Backend
         run: docker build -t cuidarteplus-backend:test ./BACKEND
 
-      - name: Escanear imagen con Trivy (Bloquea si hay vulnerabilidades CRITICAL)
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          image-ref: 'cuidarteplus-backend:test'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL'
+      - name: Instalar y ejecutar Trivy (Bloquea si hay vulnerabilidades CRITICAL)
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+          trivy image --severity CRITICAL --exit-code 1 --ignore-unfixed cuidarteplus-backend:test
 
   # 3. PRUEBAS AUTOMATIZADAS FUNCIONALES Y DE SEGURIDAD API (DAST)
   pruebas-automatizadas-api:
