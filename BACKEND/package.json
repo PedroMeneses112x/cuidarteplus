@@ -1,7 +1,7 @@
 {
   "name": "cuidarteplus",
   "version": "1.0.0",
-  "description": "API cuidarteplus - Express + PostgreSQL (intencionalmente vulnerable)",
+  "description": "API cuidarteplus - Express + PostgreSQL",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
@@ -20,5 +20,8 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
+  },
+  "overrides": {
+    "proxy-addr": "^2.0.8"
   }
 }
